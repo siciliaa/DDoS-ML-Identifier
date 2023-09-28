@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 import csv
 from sklearn.metrics import accuracy_score
-
+import random
 
 path = r'final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
@@ -22,8 +22,8 @@ data_X_train, data_X_test = train_test_split(data_X, test_size=0.2, random_state
 data_Y_train, data_y_test = train_test_split(data_y, test_size=0.2, random_state=42)
 
 print("Creando array de predicción")
-
-data_y_pred = [1] * len(data_y_test)
+data_y_pred = [random.randint(0, 1) for _ in range(len(data_y_test))]
+# data_y_pred = [1] * len(data_y_test)
 
 # Change 'ddos' to 1 and any other value to 0:
 print("Cambiado 'ddos' a 1 y cualquier otro caso a 0")
