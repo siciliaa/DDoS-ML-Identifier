@@ -14,7 +14,7 @@ from sklearn.preprocessing import RobustScaler
 import random
 
 
-path = r'final_dataset.csv/final_dataset.csv'
+path = r'../final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
 print("He leído ya el dataset. Procedo a eliminar y tratar los datos.")
 """

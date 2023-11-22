@@ -17,7 +17,7 @@ import random
 
 # Leemos el DF:
 
-path = r'final_dataset.csv/final_dataset.csv'
+path = r'../final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
 print("He leído ya el dataset.")
 
@@ -109,8 +109,8 @@ k = 5
 clf = KNeighborsClassifier(n_neighbors=k)
 
 
-subset_X_train = data_X_train.iloc[:, :4]
-subset_X_test = data_X_test.iloc[:, :4]
+subset_X_train = data_X_train.iloc[:, :5]
+subset_X_test = data_X_test.iloc[:, :5]
 
 """print(subset_X_train)
 

@@ -11,7 +11,7 @@ import random
 from sklearn.metrics import f1_score
 from sklearn.metrics import classification_report
 
-path = r'final_dataset.csv/final_dataset.csv'
+path = r'../final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
 
 print("He leído ya los datos del dataset")
