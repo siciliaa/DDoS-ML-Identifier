@@ -1,20 +1,11 @@
-import copy
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn import datasets, linear_model
-from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-import csv
 from sklearn.metrics import accuracy_score
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import RobustScaler
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
-import random
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import export_graphviz
+from subprocess import call
 from datetime import datetime
+
 
 # Leemos el DF:
 
@@ -23,7 +14,7 @@ df = pd.read_csv(path)
 print("He leído ya el dataset.")
 
 
-# Cogemos todas las columnas menos la etiqueta, num y flowID:
+# Cogemos todas las columnas menos la etiqueta y flowID:
 columnas_eliminar = ['Label', 'Flow ID']
 
 data_X = df.drop(columnas_eliminar, axis=1)  # All columns except "label"
@@ -47,7 +38,6 @@ print("Vamos a tratar los NaN")
 for index, value in data_X['Src IP'].items():
     if pd.isna(data_X.at[index, 'Src IP']):
         data_X.at[index, 'Src IP'] = 0
-
 for index, value in data_X['Timestamp'].items():
     if pd.isna(data_X.at[index, 'Timestamp']):
         data_X.at[index, 'Timestamp'] = 0
@@ -61,27 +51,11 @@ for index, value in data_X['Timestamp'].items():
             timestamp = fecha_hora_obj.timestamp()
             data_X.at[index, 'Timestamp'] = timestamp
 
-
 # Columna 2:
 
 for index, value in data_X['Src Port'].items():
     if pd.isna(data_X.at[index, 'Src Port']):
         data_X.at[index, 'Src Port'] = 0
-
-
-# Columna 3:
-
-for index, value in data_X['Dst Port'].items():
-    if pd.isna(data_X.at[index, 'Dst Port']):
-        data_X.at[index, 'Dst Port'] = 0
-
-
-
-# Columna 4:
-
-for index, value in data_X['Dst IP'].items():
-    if pd.isna(data_X.at[index, 'Dst IP']):
-        data_X.at[index, 'Dst IP'] = 0
 
 for index, value in data_X['Flow Duration'].items():
     if pd.isna(data_X.at[index, 'Flow Duration']):
@@ -94,6 +68,18 @@ for index, value in data_X['Tot Fwd Pkts'].items():
 for index, value in data_X['Tot Bwd Pkts'].items():
     if pd.isna(data_X.at[index, 'Tot Bwd Pkts']):
         data_X.at[index, 'Tot Bwd Pkts'] = 0
+# Columna 3:
+
+for index, value in data_X['Dst Port'].items():
+    if pd.isna(data_X.at[index, 'Dst Port']):
+        data_X.at[index, 'Dst Port'] = 0
+
+# Columna 4:
+
+for index, value in data_X['Dst IP'].items():
+    if pd.isna(data_X.at[index, 'Dst IP']):
+        data_X.at[index, 'Dst IP'] = 0
+
 
 # Columna 5:
 
@@ -109,49 +95,26 @@ data_X_train, data_X_test = train_test_split(data_X, test_size=0.2, random_state
 data_Y_train, data_y_test = train_test_split(data_y, test_size=0.2, random_state=42)
 
 
-"""for index, value in data_X_train['Src IP'].items():
-    data_X_train.at[index, 'Src IP'] = value.replace('.', '')
-print(data_X['Src IP'])"""
+# Entrenar el modelo
+clf = RandomForestClassifier(max_depth=2, random_state=0,n_estimators=10)
 
-
-
-
-# Eliminar NaN de las primeras 5 columnas
-
-
-
-
-"""
-
-print(data_X_train)
 
 subset_X_train = data_X_train.iloc[:, :5]
-print("Hola")
-print(subset_X_train)"""
-
-# Entrenar el modelo
-k = 5
-clf = KNeighborsClassifier(n_neighbors=k)
+subset_X_test = data_X_test.iloc[:, :5]
 
 
-subset_X_train = data_X_train.iloc[:, :9]
-subset_X_test = data_X_test.iloc[:, :9]
+#Train with decision tree
+clf = clf.fit(subset_X_train, data_Y_train)
 
-"""print(subset_X_train)
+#Predict
+prediction = clf.predict(subset_X_test)
 
-print("********************************************")
-print("********************************************")
-print("********************************************")
-print("********************************************")
+accuracy = accuracy_score(data_y_test, prediction)
+print("Precisión: ", accuracy)
 
-print(subset_X_test)"""
-
-
-clf.fit(subset_X_train, data_Y_train)
-
-print("Vamos a predecir")
-data_y_pred = clf.predict(subset_X_test)
-
-accuracy = accuracy_score(data_y_test, data_y_pred)
-print(accuracy)
+for i in range(len(clf.estimators_)):
+    estimator = clf.estimators_[i]
+    export_graphviz(estimator,
+    out_file='tree.dot', rounded=True, proportion=False,precision=2, filled=True)
+call(['dot','-Tpng', 'tree.dot','-o','tree' + str(i) + '.png','-Gdpi=600'])
 

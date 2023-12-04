@@ -154,4 +154,3 @@ data_y_pred = clf.predict(subset_X_test)
 
 accuracy = accuracy_score(data_y_test, data_y_pred)
 print(accuracy)
-
