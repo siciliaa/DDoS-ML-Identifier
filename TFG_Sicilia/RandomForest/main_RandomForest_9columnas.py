@@ -87,6 +87,9 @@ for index, value in data_X['Protocol'].items():
     if pd.isna(data_X.at[index, 'Protocol']):
         data_X.at[index, 'Protocol'] = 0
 
+for index, value in data_X['TotLen Fwd Pkts'].items():
+    if pd.isna(data_X.at[index, 'TotLen Fwd Pkts']):
+        data_X.at[index, 'TotLen Fwd Pkts'] = 0
 
 # Dividimos los datos del DF:
 
@@ -99,8 +102,8 @@ data_Y_train, data_y_test = train_test_split(data_y, test_size=0.2, random_state
 clf = RandomForestClassifier(max_depth=2, random_state=0,n_estimators=10)
 
 
-subset_X_train = data_X_train.iloc[:, :5]
-subset_X_test = data_X_test.iloc[:, :5]
+subset_X_train = data_X_train.iloc[:, :10]
+subset_X_test = data_X_test.iloc[:, :10]
 
 
 #Train with decision tree

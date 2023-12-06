@@ -101,6 +101,9 @@ for index, value in data_X['Protocol'].items():
     if pd.isna(data_X.at[index, 'Protocol']):
         data_X.at[index, 'Protocol'] = 0
 
+for index, value in data_X['TotLen Fwd Pkts'].items():
+    if pd.isna(data_X.at[index, 'TotLen Fwd Pkts']):
+        data_X.at[index, 'TotLen Fwd Pkts'] = 0
 
 # Dividimos los datos del DF:
 
@@ -134,8 +137,8 @@ k = 5
 clf = KNeighborsClassifier(n_neighbors=k)
 
 
-subset_X_train = data_X_train.iloc[:, :9]
-subset_X_test = data_X_test.iloc[:, :9]
+subset_X_train = data_X_train.iloc[:, :10]
+subset_X_test = data_X_test.iloc[:, :10]
 
 """print(subset_X_train)
 
