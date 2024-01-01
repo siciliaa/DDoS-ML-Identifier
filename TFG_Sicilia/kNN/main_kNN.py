@@ -1,23 +1,13 @@
-import copy
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import datasets, linear_model
-from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-import csv
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import RobustScaler
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
-import random
+from datetime import datetime
 
 # Leemos el DF:
 
-path = r'../final_dataset.csv/final_dataset.csv'
+path = r'final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
 print("He leído ya el dataset.")
 
@@ -40,41 +30,33 @@ print("Ahora vamos a cambiar 'ddos' a 1 y cualquier otro caso a 0 ")
 data_y = data_y.apply(lambda x: 1 if x == 'ddos' else 0)
 
 print("Vamos a tratar los NaN")
+# Variable de control para saber por que columna acabamos de analizar:
 
-# Columna 1:
+a = 0
 
-for index, value in data_X['Src IP'].items():
-    if pd.isna(data_X.at[index, 'Src IP']):
-        data_X.at[index, 'Src IP'] = 0
+for i in data_X.columns[:25]:
+    for index, value in data_X[i].items():
+            if pd.isna(data_X.at[index, i]):
+                data_X.at[index, i] = 0
+            elif value == np.inf:
+                data_X.at[index, i] = int(100000000000)
+            elif isinstance(value, float):
+                data_X.at[index, i] = int(value * 100000)
 
+    print(a)
+    a += 1
 
-# Columna 2:
+print("Timestamp")
 
-for index, value in data_X['Src Port'].items():
-    if pd.isna(data_X.at[index, 'Src Port']):
-        data_X.at[index, 'Src Port'] = 0
-
-
-# Columna 3:
-
-for index, value in data_X['Dst Port'].items():
-    if pd.isna(data_X.at[index, 'Dst Port']):
-        data_X.at[index, 'Dst Port'] = 0
-
-
-
-# Columna 4:
-
-for index, value in data_X['Dst IP'].items():
-    if pd.isna(data_X.at[index, 'Dst IP']):
-        data_X.at[index, 'Dst IP'] = 0
-
-
-# Columna 5:
-
-for index, value in data_X['Protocol'].items():
-    if pd.isna(data_X.at[index, 'Protocol']):
-        data_X.at[index, 'Protocol'] = 0
+for index, value in data_X['Timestamp'].items():
+    if "AM" in value or "PM" in value:
+        fecha_hora_obj = datetime.strptime(value, "%d/%m/%Y %I:%M:%S %p")
+        timestamp = fecha_hora_obj.timestamp()
+        data_X.at[index, 'Timestamp'] = timestamp
+    else:
+        fecha_hora_obj = datetime.strptime(value, "%d/%m/%Y %H:%M:%S")
+        timestamp = fecha_hora_obj.timestamp()
+        data_X.at[index, 'Timestamp'] = timestamp
 
 
 # Dividimos los datos del DF:
@@ -83,48 +65,19 @@ print("Voy a dividir los datos del dataset")
 data_X_train, data_X_test = train_test_split(data_X, test_size=0.2, random_state=42)
 data_Y_train, data_y_test = train_test_split(data_y, test_size=0.2, random_state=42)
 
-
-"""for index, value in data_X_train['Src IP'].items():
-    data_X_train.at[index, 'Src IP'] = value.replace('.', '')
-print(data_X['Src IP'])"""
-
-
-
-
-# Eliminar NaN de las primeras 5 columnas
-
-
-
-
-"""
-
-print(data_X_train)
-
-subset_X_train = data_X_train.iloc[:, :5]
-print("Hola")
-print(subset_X_train)"""
-
 # Entrenar el modelo
 k = 5
 clf = KNeighborsClassifier(n_neighbors=k)
 
+print("Creación de subset.")
 
-subset_X_train = data_X_train.iloc[:, :5]
-subset_X_test = data_X_test.iloc[:, :5]
+subset_X_train = data_X_train.iloc[:, :25]
+subset_X_test = data_X_test.iloc[:, :25]
 
-"""print(subset_X_train)
-
-print("********************************************")
-print("********************************************")
-print("********************************************")
-print("********************************************")
-
-print(subset_X_test)"""
-
-
+print("Entrenar modelo.")
 clf.fit(subset_X_train, data_Y_train)
 
-print("Vamos a predecir")
+print("Vamos a predecir.")
 data_y_pred = clf.predict(subset_X_test)
 
 accuracy = accuracy_score(data_y_test, data_y_pred)

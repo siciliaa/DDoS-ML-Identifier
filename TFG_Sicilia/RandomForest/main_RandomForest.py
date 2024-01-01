@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import export_graphviz
 from subprocess import call
-
+from datetime import datetime
 
 # Leemos el DF:
 
@@ -32,38 +32,33 @@ data_y = data_y.apply(lambda x: 1 if x == 'ddos' else 0)
 
 print("Vamos a tratar los NaN")
 
-# Columna 1:
+# Variable de control para saber por que columna acabamos de analizar:
 
-for index, value in data_X['Src IP'].items():
-    if pd.isna(data_X.at[index, 'Src IP']):
-        data_X.at[index, 'Src IP'] = 0
+a = 0
 
+for i in data_X.columns[:25]:
+    for index, value in data_X[i].items():
+            if pd.isna(data_X.at[index, i]):
+                data_X.at[index, i] = 0
+            elif value == np.inf:
+                data_X.at[index, i] = int(100000000000)
+            elif isinstance(value, float):
+                data_X.at[index, i] = int(value * 100000)
 
-# Columna 2:
+    print(a)
+    a += 1
 
-for index, value in data_X['Src Port'].items():
-    if pd.isna(data_X.at[index, 'Src Port']):
-        data_X.at[index, 'Src Port'] = 0
+print("Timestamp")
 
-
-# Columna 3:
-
-for index, value in data_X['Dst Port'].items():
-    if pd.isna(data_X.at[index, 'Dst Port']):
-        data_X.at[index, 'Dst Port'] = 0
-
-# Columna 4:
-
-for index, value in data_X['Dst IP'].items():
-    if pd.isna(data_X.at[index, 'Dst IP']):
-        data_X.at[index, 'Dst IP'] = 0
-
-
-# Columna 5:
-
-for index, value in data_X['Protocol'].items():
-    if pd.isna(data_X.at[index, 'Protocol']):
-        data_X.at[index, 'Protocol'] = 0
+for index, value in data_X['Timestamp'].items():
+    if "AM" in value or "PM" in value:
+        fecha_hora_obj = datetime.strptime(value, "%d/%m/%Y %I:%M:%S %p")
+        timestamp = fecha_hora_obj.timestamp()
+        data_X.at[index, 'Timestamp'] = timestamp
+    else:
+        fecha_hora_obj = datetime.strptime(value, "%d/%m/%Y %H:%M:%S")
+        timestamp = fecha_hora_obj.timestamp()
+        data_X.at[index, 'Timestamp'] = timestamp
 
 
 # Dividimos los datos del DF:
@@ -76,17 +71,19 @@ data_Y_train, data_y_test = train_test_split(data_y, test_size=0.2, random_state
 # Entrenar el modelo
 clf = RandomForestClassifier(max_depth=2, random_state=0,n_estimators=10)
 
+print("Creación de subset.")
+subset_X_train = data_X_train.iloc[:, :25]
+subset_X_test = data_X_test.iloc[:, :25]
 
-subset_X_train = data_X_train.iloc[:, :5]
-subset_X_test = data_X_test.iloc[:, :5]
-
-
+print("Entrenar modelo.")
 #Train with decision tree
 clf = clf.fit(subset_X_train, data_Y_train)
 
+print("Vamos a predecir")
 #Predict
 prediction = clf.predict(subset_X_test)
 
+print()
 accuracy = accuracy_score(data_y_test, prediction)
 print("Precisión: ", accuracy)
 
