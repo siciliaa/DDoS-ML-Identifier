@@ -19,7 +19,6 @@ barplot = distribucion.plot(kind='bar', color=colors)
 
 plt.xlabel('Clase', fontsize=14)
 plt.ylabel('Porcentaje de los puntos', fontsize=14)
-plt.title('Distribución de los datos', fontsize=16)
 plt.xticks(rotation=45, ha='right', fontsize=12)  # Rotate x-axis labels for better readability
 plt.yticks(fontsize=12)
 
