@@ -4,6 +4,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from datetime import datetime
 from sklearn import tree
+from sklearn.feature_selection import chi2
+from sklearn.feature_selection import SelectKBest
+from sklearn import datasets
 import graphviz
 import ipaddress
 
