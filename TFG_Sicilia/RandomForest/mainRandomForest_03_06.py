@@ -71,7 +71,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características más importantes usando Chi-Square")
-selector = SelectKBest(score_func=chi2, k=15)
+selector = SelectKBest(score_func=chi2, k=25)
 data_X_selected = selector.fit_transform(data_X, data_y)
 selected_features = data_X.columns[selector.get_support()]
 print(f"Características seleccionadas: {selected_features}")
@@ -82,7 +82,7 @@ data_X_train, data_X_test, data_y_train, data_y_test = train_test_split(data_X_s
                                                                         random_state=42)
 
 # Entrenar el modelo
-clf = RandomForestClassifier(max_depth=15, random_state=42, n_estimators=15)
+clf = RandomForestClassifier(max_depth=25, random_state=42, n_estimators=25)
 
 print("Entrenar modelo")
 entrenar = time.time()
@@ -113,7 +113,7 @@ print("[*]Recall (Sensibilidad):", recall)
 print("[*]F1 Score:", f1)
 
 # Crear directorio para almacenar los árboles si no existe
-output_dir = 'trees_15'
+output_dir = 'trees_25'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
