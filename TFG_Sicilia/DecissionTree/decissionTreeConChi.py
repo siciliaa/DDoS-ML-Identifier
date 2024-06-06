@@ -1,18 +1,23 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from datetime import datetime
 from sklearn import tree
 from sklearn.feature_selection import chi2, SelectKBest
 import graphviz
 import ipaddress
+import time
 import os
 
 # Leemos el DF
+start_time = time.time()
 path = r'../final_dataset.csv/final_dataset.csv'
 df = pd.read_csv(path)
 print("He leído ya el dataset.")
+leido = time.time()
+
+tiempo_lectura_dataset = leido - start_time
 
 # Cogemos todas las columnas menos la etiqueta y flowID
 columnas_eliminar = ['Label', 'Flow ID', 'Fwd Seg Size Avg', 'Subflow Fwd Byts', 'Bwd Pkt Len Mean', 'Tot Fwd Pkts', 'Tot Bwd Pkts',
@@ -61,7 +66,8 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características con Chi-Square")
-selector = SelectKBest(score_func=chi2, k=5)  # Selecciona las 10 mejores características
+selector = SelectKBest(score_func=chi2, k=20)  # Selecciona las 10 mejores características
+
 data_X_selected = selector.fit_transform(data_X, data_y)
 
 # Obtener los nombres de las características seleccionadas
@@ -75,26 +81,43 @@ data_X_train, data_X_test, data_y_train, data_y_test = train_test_split(data_X_s
 
 # Entrenar el modelo
 print("Entrenando el modelo")
-clf = tree.DecisionTreeClassifier(random_state=42, max_depth=5)
+entrenar = time.time()
+clf = tree.DecisionTreeClassifier(random_state=42, max_depth=20)
 
 # Entrenar el modelo
 print("Vamos a entrenar el modelo")
 clf = clf.fit(data_X_train, data_y_train)
 
 # Predecir
+predecir = time.time()
 print("Vamos a predecir")
 prediction = clf.predict(data_X_test)
-
+fin_predecir = time.time()
+tiempo_en_predecir = fin_predecir - predecir
+tiempo_en_entrenar_y_predecir = fin_predecir - entrenar
 accuracy = accuracy_score(data_y_test, prediction)
-print("Precisión: ", accuracy)
+
+precision = precision_score(data_y_test, prediction)
+recall = recall_score(data_y_test, prediction)
+f1 = f1_score(data_y_test, prediction)
+total_time = fin_predecir - start_time
+
+print("********************************")
+print(f"[*]Tiempo total de ejecución: {total_time}\n[*]Tiempo tardado en leer el dataset: {tiempo_lectura_dataset}\n[*]Tiempo en entrenar y predecir: {tiempo_en_entrenar_y_predecir}\n[*]Tiempo en predecir: {tiempo_en_predecir}")
+print("********************************")
+
+print("[*]Accuracy:", accuracy)
+print("[*]Precision:", precision)
+print("[*]Recall (Sensibilidad):", recall)
+print("[*]F1 Score:", f1)
 
 # Crear el árbol y guardarlo
 print("Creando el árbol")
 dot_data = tree.export_graphviz(clf, out_file=None, feature_names=selected_features, filled=True, rounded=True, special_characters=True)
 graph = graphviz.Source(dot_data)
 
-# Guardar el árbol en formato PNG
+# Guardar el árbol en formato PDF
 output_dir = 'trees'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
-graph.render(os.path.join(output_dir, 'decision_tree'), format='png', view=True)
+graph.render(os.path.join(output_dir, 'decision_tree_20'), format='pdf', view=True)

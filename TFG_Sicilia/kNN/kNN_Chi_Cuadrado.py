@@ -65,7 +65,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características más importantes usando Chi-Square")
-selector = SelectKBest(score_func=chi2, k=10)
+selector = SelectKBest(score_func=chi2, k=20)
 data_X_selected = selector.fit_transform(data_X, data_y)
 
 # Dividimos los datos del DF:
@@ -73,7 +73,7 @@ print("Voy a dividir los datos del dataset")
 data_X_train, data_X_test, data_y_train, data_y_test = train_test_split(data_X_selected, data_y, test_size=0.2, random_state=42)
 
 # Entrenar el modelo
-k = 10
+k = 20
 clf = KNeighborsClassifier(n_neighbors=k)
 
 print("Entrenar modelo.")
