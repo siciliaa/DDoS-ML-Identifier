@@ -67,6 +67,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 print("Seleccionando características más importantes usando Chi-Square")
 selector = SelectKBest(score_func=chi2, k=20)
 data_X_selected = selector.fit_transform(data_X, data_y)
+selected_features = data_X.columns[selector.get_support()]
 
 # Dividimos los datos del DF:
 print("Voy a dividir los datos del dataset")

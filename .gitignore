@@ -31,3 +31,17 @@ TFG_Sicilia/prueba.py
 TFG_Sicilia/pruebaValoresNulos.py
 TFG_Sicilia/distribucion_datos.pdf
 TFG_Sicilia/prueba.py
+*.dot
+*.pdf
+*.dot
+*.png
+TFG_Sicilia/RandomForest/trees/tree_0.dot
+TFG_Sicilia/RandomForest/trees/tree_0.png
+TFG_Sicilia/RandomForest/trees/tree_1.dot
+TFG_Sicilia/RandomForest/trees/tree_1.png
+TFG_Sicilia/RandomForest/trees/tree_2.dot
+TFG_Sicilia/RandomForest/trees/tree_2.png
+TFG_Sicilia/RandomForest/trees/tree_3.dot
+TFG_Sicilia/RandomForest/trees/tree_3.png
+TFG_Sicilia/RandomForest/trees/tree_4.dot
+TFG_Sicilia/RandomForest/trees/tree_4.png

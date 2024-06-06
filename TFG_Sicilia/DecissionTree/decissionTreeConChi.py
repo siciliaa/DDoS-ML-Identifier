@@ -66,7 +66,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características con Chi-Square")
-selector = SelectKBest(score_func=chi2, k=20)  # Selecciona las 10 mejores características
+selector = SelectKBest(score_func=chi2, k=25)  # Selecciona las 10 mejores características
 
 data_X_selected = selector.fit_transform(data_X, data_y)
 
@@ -82,7 +82,7 @@ data_X_train, data_X_test, data_y_train, data_y_test = train_test_split(data_X_s
 # Entrenar el modelo
 print("Entrenando el modelo")
 entrenar = time.time()
-clf = tree.DecisionTreeClassifier(random_state=42, max_depth=20)
+clf = tree.DecisionTreeClassifier(random_state=42, max_depth=25)
 
 # Entrenar el modelo
 print("Vamos a entrenar el modelo")
@@ -120,4 +120,4 @@ graph = graphviz.Source(dot_data)
 output_dir = 'trees'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
-graph.render(os.path.join(output_dir, 'decision_tree_20'), format='pdf', view=True)
+graph.render(os.path.join(output_dir, 'decision_tree_25'), format='pdf', view=True)
