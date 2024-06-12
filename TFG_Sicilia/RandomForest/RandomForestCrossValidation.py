@@ -71,7 +71,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características más importantes usando Chi-Square")
-selector = SelectKBest(score_func=chi2, k=5)
+selector = SelectKBest(score_func=chi2, k=25)
 data_X_selected = selector.fit_transform(data_X, data_y)
 selected_features = data_X.columns[selector.get_support()]
 print(f"Características seleccionadas: {selected_features}")
@@ -84,7 +84,7 @@ data_X_train, data_X_test, data_y_train, data_y_test = train_test_split(data_X_s
 # Entrenar el modelo
 print("Entrenando el modelo con validación cruzada")
 kf = KFold(n_splits=7, shuffle=True, random_state=68)
-clf = RandomForestClassifier(max_depth=5, random_state=42, n_estimators=5)
+clf = RandomForestClassifier(max_depth=25, random_state=42, n_estimators=25)
 cv_scores = cross_val_score(clf, data_X_train, data_y_train, cv=kf, scoring='accuracy')
 
 print('Se obtienen los siguientes coeficientes de determinación:')
@@ -124,7 +124,7 @@ print("[*]Recall (Sensibilidad):", recall)
 print("[*]F1 Score:", f1)
 
 # Crear directorio para almacenar los árboles si no existe
-output_dir = 'trees_crossVal_5'
+output_dir = 'trees_crossVal_25'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
