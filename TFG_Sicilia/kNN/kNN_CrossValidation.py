@@ -68,6 +68,7 @@ print("Seleccionando características más importantes usando Chi-Square")
 selector = SelectKBest(score_func=chi2, k=5)
 data_X_selected = selector.fit_transform(data_X, data_y)
 selected_features = data_X.columns[selector.get_support()]
+print(selected_features)
 
 # Dividimos los datos del DF:
 print("Voy a dividir los datos del dataset")
