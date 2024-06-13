@@ -65,7 +65,7 @@ data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
 # Selección de características usando Chi-Square
 print("Seleccionando características más importantes usando Chi-Square")
-selector = SelectKBest(score_func=chi2, k=5)
+selector = SelectKBest(score_func=chi2, k=20)
 data_X_selected = selector.fit_transform(data_X, data_y)
 selected_features = data_X.columns[selector.get_support()]
 print(selected_features)
@@ -78,7 +78,7 @@ print("Entrenando el modelo con validación cruzada")
 kf = KFold(n_splits=7, shuffle=True, random_state=68)
 
 # Entrenar el modelo
-k = 5
+k = 20
 clf = KNeighborsClassifier(n_neighbors=k)
 
 cv_scores = cross_val_score(clf, data_X_train, data_y_train, cv=kf, scoring='accuracy')
@@ -86,8 +86,8 @@ print('Se obtienen los siguientes coeficientes de determinación:')
 print(cv_scores, '\n')
 print(f'Max Accuracy: {max(cv_scores)}')
 print(f'Min Accuracy: {min(cv_scores)}')
-print('Promedio Accuracy: {:.3f}'.format(np.mean(cv_scores)))
-print('Desviación Estándar: {:.3f}'.format(np.std(cv_scores)))
+print('Promedio Accuracy: {(np.mean(cv_scores))}')
+print('Desviación Estándar: {np.std(cv_scores)}')
 print(f'Intervalo de confianza 95%: {np.quantile(cv_scores, [0.025, 0.975])}')
 
 print("Entrenar modelo.")
