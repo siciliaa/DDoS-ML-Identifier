@@ -20,22 +20,19 @@ print("He leído ya el dataset.")
 leido = time.time()
 tiempo_lectura_dataset = leido - start_time
 
-# Cogemos todas las columnas menos la etiqueta y flowID
+
 columnas_eliminar = ['Label', 'Flow ID', 'Fwd Seg Size Avg', 'Subflow Fwd Byts', 'Bwd Pkt Len Mean', 'Tot Fwd Pkts',
-                     'Tot Bwd Pkts',
-                     'TotLen Bwd Pkts', 'Bwd Header Len', 'TotLen Fwd Pkts', 'Idle Mean', 'Subflow Fwd Pkts',
-                     'Pkt Len Mean',
-                     'Subflow Bwd Pkts', 'Flow IAT Mean', 'Idle Max', 'Flow Duration', 'Flow IAT Min', 'Pkt Len Max',
-                     'Fwd Pkt Len Max', 'Fwd IAT Mean', 'Bwd Pkt Len Max', 'Fwd Pkt Len Mean', 'Fwd Header Len',
-                     'Active Mean',
-                     'Flow IAT Max', 'Pkt Size Avg', 'Protocol', 'Bwd IAT Std', 'Bwd Pkt Len Std', 'Fwd Pkt Len Min',
-                     'Fwd IAT Max', 'Flow IAT Std', 'Bwd IAT Mean', 'Fwd IAT Tot', 'Bwd Pkt Len Min', 'Active Std',
-                     'SYN Flag Cnt', 'Bwd IAT Tot', 'Fwd Pkt Len Std', 'Pkt Len Std', 'Fwd IAT Std', 'Active Max',
-                     'RST Flag Cnt', 'Bwd IAT Max', 'Src Port', 'PSH Flag Cnt', 'CWE Flag Count', 'Fwd IAT Min',
-                     'Flow Byts/s',
-                     'ACK Flag Cnt', 'Dst Port', 'Fwd Byts/b Avg', 'Fwd Pkts/b Avg', 'Fwd Blk Rate Avg',
-                     'Bwd Byts/b Avg',
-                     'Bwd Pkts/b Avg', 'Fwd URG Flags', 'Bwd URG Flags', 'Bwd Blk Rate Avg']
+                     'Tot Bwd Pkts', 'TotLen Bwd Pkts', 'Bwd Header Len', 'TotLen Fwd Pkts', 'Idle Mean',
+                     'Subflow Fwd Pkts', 'Pkt Len Mean', 'Subflow Bwd Pkts', 'Flow IAT Mean', 'Idle Max',
+                     'Flow Duration', 'Flow IAT Min', 'Pkt Len Max','Fwd Pkt Len Max', 'Fwd IAT Mean', 'Bwd Pkt Len Max',
+                     'Fwd Pkt Len Mean', 'Fwd Header Len', 'Active Mean','Flow IAT Max', 'Pkt Size Avg', 'Protocol',
+                     'Bwd IAT Std', 'Bwd Pkt Len Std', 'Fwd Pkt Len Min','Fwd IAT Max', 'Flow IAT Std', 'Bwd IAT Mean',
+                     'Fwd IAT Tot', 'Bwd Pkt Len Min', 'Active Std','SYN Flag Cnt', 'Bwd IAT Tot', 'Fwd Pkt Len Std',
+                     'Pkt Len Std', 'Fwd IAT Std', 'Active Max','RST Flag Cnt', 'Bwd IAT Max', 'Src Port',
+                     'PSH Flag Cnt', 'CWE Flag Count', 'Fwd IAT Min','Flow Byts/s', 'ACK Flag Cnt', 'Dst Port',
+                     'Fwd Byts/b Avg', 'Fwd Pkts/b Avg', 'Fwd Blk Rate Avg','Bwd Byts/b Avg','Bwd Pkts/b Avg',
+                     'Fwd URG Flags', 'Bwd URG Flags', 'Bwd Blk Rate Avg']
+
 
 data_X = df.drop(columnas_eliminar, axis=1)  # Todas las columnas excepto "label"
 data_y = df['Label']
@@ -56,7 +53,7 @@ for i in data_X.columns:
     if data_X[i].dtype == float:
         data_X[i] = data_X[i].apply(lambda x: int(x * 100000))
 
-# Convertir timestamps a segundos desde epoch
+# Convertir timestamps a segundos
 print("Se trata timestamp")
 for index, value in data_X['Timestamp'].items():
     if "AM" in value or "PM" in value:
@@ -124,22 +121,21 @@ print("[*]Recall (Sensibilidad):", recall)
 print("[*]F1 Score:", f1)
 
 # Crear directorio para almacenar los árboles si no existe
-output_dir = 'trees_crossVal_25'
+output_dir = 'trees_Cross_Validation/trees_crossVal_25'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Exportar y guardar todos los árboles en archivos PDF
+# Exportar y guardar todos los árboles
 feature_names = selected_features  # Cambia esto para que coincida con las características seleccionadas
 for i, estimator in enumerate(clf.estimators_):
     dot_file = f'{output_dir}/tree_{i}.dot'
     pdf_file = f'{output_dir}/tree_{i}.pdf'
 
-    # Exportar el árbol a un archivo .dot
     export_graphviz(estimator, out_file=dot_file,
                     feature_names=feature_names,
                     rounded=True, proportion=False,
                     precision=2, filled=True)
 
-    # Convertir el archivo .dot a .pdf
+
     call(['dot', '-Tpdf', dot_file, '-o', pdf_file])
     print(f'Árbol {i} guardado como {pdf_file}')

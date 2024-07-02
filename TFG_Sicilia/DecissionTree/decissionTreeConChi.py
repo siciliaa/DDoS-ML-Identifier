@@ -19,7 +19,7 @@ leido = time.time()
 
 tiempo_lectura_dataset = leido - start_time
 
-# Cogemos todas las columnas menos la etiqueta y flowID
+
 columnas_eliminar = ['Label', 'Flow ID', 'Fwd Seg Size Avg', 'Subflow Fwd Byts', 'Bwd Pkt Len Mean', 'Tot Fwd Pkts', 'Tot Bwd Pkts',
                      'TotLen Bwd Pkts', 'Bwd Header Len', 'TotLen Fwd Pkts', 'Idle Mean', 'Subflow Fwd Pkts', 'Pkt Len Mean',
                      'Subflow Bwd Pkts', 'Flow IAT Mean', 'Idle Max', 'Flow Duration', 'Flow IAT Min', 'Pkt Len Max',
@@ -50,7 +50,7 @@ for i in data_X.columns:
     if data_X[i].dtype == float:
         data_X[i] = data_X[i].apply(lambda x: int(x * 100000))
 
-# Convertir timestamps a segundos desde epoch
+# Convertir timestamps a segundos
 print("Se trata timestamp")
 for index, value in data_X['Timestamp'].items():
     if "AM" in value or "PM" in value:
@@ -60,7 +60,7 @@ for index, value in data_X['Timestamp'].items():
     timestamp = fecha_hora_obj.timestamp()
     data_X.at[index, 'Timestamp'] = timestamp
 
-# Asegurarse de que todos los valores sean no negativos
+# Asegurar valores no negativos
 print("Asegurando que todos los valores sean no negativos")
 data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
@@ -111,12 +111,12 @@ print("[*]Precision:", precision)
 print("[*]Recall (Sensibilidad):", recall)
 print("[*]F1 Score:", f1)
 
-# Crear el árbol y guardarlo
+# Crear el árbol
 print("Creando el árbol")
 dot_data = tree.export_graphviz(clf, out_file=None, feature_names=selected_features, filled=True, rounded=True, special_characters=True)
 graph = graphviz.Source(dot_data)
 
-# Guardar el árbol en formato PDF
+# Guardar el árbol
 output_dir = 'trees'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)

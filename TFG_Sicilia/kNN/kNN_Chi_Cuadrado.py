@@ -17,7 +17,7 @@ print("He leído ya el dataset.")
 dataset_leido = time.time()
 tiempo_leer_dataset = dataset_leido - start_time
 
-# Columnas a eliminar
+
 columnas_eliminar = ['Label', 'Flow ID', 'Fwd Seg Size Avg', 'Subflow Fwd Byts', 'Bwd Pkt Len Mean', 'Tot Fwd Pkts',
                      'Tot Bwd Pkts', 'TotLen Bwd Pkts', 'Bwd Header Len', 'TotLen Fwd Pkts', 'Idle Mean',
                      'Subflow Fwd Pkts', 'Pkt Len Mean', 'Subflow Bwd Pkts', 'Flow IAT Mean', 'Idle Max',
@@ -49,7 +49,7 @@ for i in data_X.columns:
     if data_X[i].dtype == float:
         data_X[i] = data_X[i].apply(lambda x: int(x * 100000))
 
-# Convertir timestamps a segundos desde epoch
+# Convertir timestamps a segundos
 print("Se trata timestamp")
 for index, value in data_X['Timestamp'].items():
     if "AM" in value or "PM" in value:
@@ -59,7 +59,7 @@ for index, value in data_X['Timestamp'].items():
     timestamp = fecha_hora_obj.timestamp()
     data_X.at[index, 'Timestamp'] = timestamp
 
-# Asegurarse de que todos los valores sean no negativos
+# Asegurar valores no negativos
 print("Asegurando que todos los valores sean no negativos")
 data_X = data_X.apply(lambda x: x - x.min() if x.min() < 0 else x)
 
