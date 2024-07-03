@@ -4,6 +4,7 @@ El crecimiento en el uso de dispositivos y sistemas, motivado por la evolución 
 
 El presente Trabajo Fin de Grado se centra en la identificación eficiente de ataques DDoS mediante técnicas de aprendizaje supervisado. El objetivo principal es la evaluación de modelos que pueden detectar este tipo de ataques de manera eficaz y eficiente, asegurando una rápida detección de ataques DDoS. Para lograr esto, se ha utilizado un conjunto de datos representativo y reconocido en el ámbito de la detección de DDoS.
 
-Los resultados obtenidos son competitivos en precisión y velocidad de la detección de este tipo de ataque frente al estado del arte. Este estudio ha permitido identificar características clave que mejoran la capacidad de clasificación del tráfico.
+Los resultados obtenidos son competitivos en precisión y velocidad de la detección de este tipo de ataque frente al estado del arte (https://doi.org/10.3390/
+ app13179488). Este estudio ha permitido identificar características clave que mejoran la capacidad de clasificación del tráfico.
 
 El repositorio incluye el código de los tres modelos desarrollados para este Trabajo de Fin de Grado (TFG). Los modelos han sido implementados utilizando el método Chi-Square, así como una combinación de Chi-Square y validación cruzada para garantizar la robustez de los resultados.
