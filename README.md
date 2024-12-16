@@ -1,4 +1,4 @@
-# TFG_Sicilia
+# DDoS ML Identifier
 
 El crecimiento en el uso de dispositivos y sistemas, motivado por la evolución tecnológica y las necesidades de comunicación de la población, ha dado lugar a un aumento de la frecuencia y complejidad de ataques cibernéticos. En particular, los ataques de Denegación de Servicios Distribuido (DDoS) representan una gran amenaza para la disponibilidad de servicios en línea. En este contexto, este determinado tipo de ataque, inunda los recursos de red con una gran cantidad de tráfico malicioso con el fin de paralizar infraestructuras y servicios, causando pérdidas económicas significativas.
 
